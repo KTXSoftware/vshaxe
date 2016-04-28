@@ -1,3 +1,4 @@
+import js.node.Path;
 import Vscode;
 
 using StringTools;
@@ -43,6 +44,9 @@ class Main {
             documentSelector: "haxe",
             synchronize: {
                 configurationSection: "haxe"
+            },
+            initializationOptions: {
+                kha: findKha()
             }
         };
         var client = new LanguageClient("Haxe", serverOptions, clientOptions);
@@ -60,6 +64,13 @@ class Main {
         }
         startLanguageServer();
     }
+    
+    static function findKha():String {
+		var config:Dynamic = Vscode.workspace.getConfiguration('kha');
+		var khapath:String = config.khaPath;
+		if (khapath.length > 0) return khapath;
+		return Path.join(Vscode.extensions.getExtension('ktx.kha').extensionPath, 'Kha');
+	}
 
     function initProject() {
         var workspaceRoot = Vscode.workspace.rootPath;
