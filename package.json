@@ -26,7 +26,7 @@
             "properties": {
                 "haxe.displayArguments": {
                     "type": "array",
-                    "default": [],
+                    "default": ["project-debug-html5.hxml"],
                     "description": "Command-line arguments passed to haxe completion server. Can contain hxml files. Relative paths will be resolved against workspace root.",
                     "items": {"type": "string"}
                 }
