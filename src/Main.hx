@@ -6,13 +6,21 @@ using StringTools;
 class Main {
     var context:ExtensionContext;
     var serverDisposable:Disposable;
+    var vshaxeChannel:OutputChannel;
 
     function new(ctx) {
         context = ctx;
+        vshaxeChannel = Vscode.window.createOutputChannel("vshaxe");
+        vshaxeChannel.show();
         context.subscriptions.push(Vscode.commands.registerCommand("haxe.restartLanguageServer", restartLanguageServer));
         context.subscriptions.push(Vscode.commands.registerCommand("haxe.initProject", initProject));
         context.subscriptions.push(Vscode.commands.registerCommand("haxe.applyFixes", applyFixes));
         startLanguageServer();
+
+    }
+
+    function log(message:String) {
+        vshaxeChannel.append(message);
     }
 
     function applyFixes(uri:String, version:Int, edits:Array<vscode.BasicTypes.TextEdit>) {
@@ -37,8 +45,8 @@ class Main {
     function startLanguageServer() {
         var serverModule = context.asAbsolutePath("./server_wrapper.js");
         var serverOptions = {
-            run: {module: serverModule},
-            debug: {module: serverModule, options: {execArgv: ["--nolazy", "--debug=6004"]}}
+            run: {module: serverModule, options: {env: js.Node.process.env}},
+            debug: {module: serverModule, options: {env: js.Node.process.env, execArgv: ["--nolazy", "--debug=6004"]}}
         };
         var clientOptions = {
             documentSelector: "haxe",
@@ -50,8 +58,9 @@ class Main {
             }
         };
         var client = new LanguageClient("Haxe", serverOptions, clientOptions);
+        client.onNotification({method: "vshaxe/log"}, log);
         client.onReady().then(function(_) {
-            Vscode.window.setStatusBarMessage("Haxe language server started", 2000);
+            log("Haxe language server started\n");
         });
         serverDisposable = client.start();
         context.subscriptions.push(serverDisposable);
