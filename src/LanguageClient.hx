@@ -1,7 +1,9 @@
 import haxe.extern.EitherType;
 import js.node.ChildProcess.ChildProcessForkOptions;
 import js.Promise;
-import Vscode;
+import vscode.Disposable;
+import vscode.FileSystemWatcher;
+import vscode.TextDocument;
 
 @:jsRequire("vscode-languageclient", "LanguageClient")
 extern class LanguageClient {
@@ -9,6 +11,7 @@ extern class LanguageClient {
     function start():Disposable;
     function stop():Void;
     function onNotification(type:{method:String}, handler:Dynamic->Void):Void;
+    function sendNotification(type:{method:String}, ?params:Dynamic):Void;
     function onReady():Promise<Void>;
 }
 

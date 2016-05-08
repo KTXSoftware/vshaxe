@@ -1,3 +1,6 @@
 [submodule "server"]
 	path = server
 	url = ../haxe-languageserver
+[submodule "vscode-extern"]
+	path = vscode-extern
+	url = ../vscode-extern
