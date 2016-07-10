@@ -23,6 +23,10 @@ class Main {
         context.subscriptions.push(commands.registerCommand("haxe.restartLanguageServer", restartLanguageServer));
         context.subscriptions.push(commands.registerCommand("haxe.applyFixes", applyFixes));
 
+        if (!js.node.Fs.existsSync(Path.join(Vscode.workspace.rootPath, "build", "project-debug-html5.hxml"))) {
+            Vscode.extensions.getExtension('ktx.kha').exports.compile("debug-html5");
+        }
+
         startLanguageServer();
     }
 
