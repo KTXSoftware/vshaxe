@@ -111,5 +111,8 @@
                 "url": "http://json.schemastore.org/haxelib"
             }
         ]
-    }
+    },
+    "extensionDependencies": [
+        "ktx.kha"
+    ]
 }

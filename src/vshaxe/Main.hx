@@ -70,7 +70,7 @@ class Main {
         var client = new LanguageClient("Haxe", serverOptions, clientOptions);
         client.onNotification({method: "vshaxe/log"}, log);
         client.onReady().then(function(_) {
-            log("Haxe language server started\n");
+            log("Haxe language server started with Kha at " + findKha() + "\n");
             displayConfig.onDidChangeIndex = function(index) {
                 client.sendNotification({method: "vshaxe/didChangeDisplayConfigurationIndex"}, {index: index});
             }
@@ -88,10 +88,8 @@ class Main {
     }
 
     static function findKha():String {
-        var config:Dynamic = Vscode.workspace.getConfiguration('kha');
-        var khapath:String = config.khaPath;
-        if (khapath.length > 0) return khapath;
-        return Path.join(Vscode.extensions.getExtension('ktx.kha').extensionPath, 'Kha');
+        var khaapi = Vscode.extensions.getExtension('ktx.kha').exports;
+        return khaapi.findKha();
     }
 
     @:keep
