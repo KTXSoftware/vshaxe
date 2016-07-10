@@ -17,7 +17,7 @@ class Main {
         new InitProject(ctx);
 
         vshaxeChannel = window.createOutputChannel("vshaxe");
-        vshaxeChannel.show();
+        //vshaxeChannel.show();
         context.subscriptions.push(vshaxeChannel);
 
         context.subscriptions.push(commands.registerCommand("haxe.restartLanguageServer", restartLanguageServer));
