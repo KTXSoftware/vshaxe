@@ -23,7 +23,8 @@
         "url": "https://github.com/vshaxe/vshaxe.git"
     },
     "scripts": {
-        "vscode:prepublish": "haxe build.hxml"
+        "vscode:prepublish": "haxe build.hxml",
+        "postinstall": "haxe build.hxml"
     },
     "main": "bin/client.js",
     "activationEvents": [
