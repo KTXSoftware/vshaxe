@@ -12,7 +12,7 @@ class DisplayConfiguration {
     public function new(context:ExtensionContext) {
         this.context = context;
 
-        statusBarItem = window.createStatusBarItem(Right);
+        statusBarItem = window.createStatusBarItem(Left);
         statusBarItem.tooltip = "Select Haxe configuration";
         statusBarItem.command = "haxe.selectDisplayConfiguration";
         context.subscriptions.push(statusBarItem);
@@ -23,6 +23,7 @@ class DisplayConfiguration {
         context.subscriptions.push(window.onDidChangeActiveTextEditor(onDidChangeActiveTextEditor));
 
         fixIndex();
+        updateStatusBarItem();
     }
 
     function fixIndex() {
@@ -58,7 +59,7 @@ class DisplayConfiguration {
             });
         }
 
-        window.showQuickPick(items, {placeHolder: "Select haxe display configuration"}).then(function(choice:DisplayConfigurationPickItem) {
+        window.showQuickPick(items, {placeHolder: "Select Haxe display configuration"}).then(function(choice:DisplayConfigurationPickItem) {
             if (choice == null || choice.index == getIndex())
                 return;
             setIndex(choice.index);

@@ -7,13 +7,20 @@ import vscode.TextDocument;
 
 @:jsRequire("vscode-languageclient", "LanguageClient")
 extern class LanguageClient {
-    function new(name:String, serverOptions:ServerOptions, languageOptions:LanguageClientOptions, ?forceDebug:Bool);
+    function new(id:String, name:String, serverOptions:ServerOptions, languageOptions:LanguageClientOptions, ?forceDebug:Bool);
     function start():Disposable;
     function stop():Void;
     function onNotification(type:RequestType, handler:Dynamic->Void):Void;
     function sendNotification(type:RequestType, ?params:Dynamic):Void;
     function sendRequest<P,R>(type:RequestType, params:P):Thenable<R>;
     function onReady():Promise<Void>;
+    var outputChannel(default,null):vscode.OutputChannel;
+
+    function info(message:String, ?data:Any):Void;
+    function warn(message:String, ?data:Any):Void;
+    function error(message:String, ?data:Any):Void;
+
+    dynamic function logFailedRequest(type:RequestType, error:Any):Void;
 }
 
 typedef RequestType = {method:String}

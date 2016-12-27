@@ -3,6 +3,7 @@ package vshaxe;
 import js.node.Path;
 import vscode.*;
 import Vscode.*;
+import haxe.Constraints.Function;
 
 class Main {
     var context:ExtensionContext;
@@ -10,6 +11,7 @@ class Main {
     var hxFileWatcher:FileSystemWatcher;
     var vshaxeChannel:OutputChannel;
     var displayConfig:DisplayConfiguration;
+    var client:LanguageClient;
 
     function new(ctx) {
         context = ctx;
@@ -17,12 +19,14 @@ class Main {
         displayConfig = new DisplayConfiguration(ctx);
         new InitProject(ctx);
 
-        vshaxeChannel = window.createOutputChannel("vshaxe");
-        //vshaxeChannel.show();
-        context.subscriptions.push(vshaxeChannel);
+        registerCommand("restartLanguageServer", restartLanguageServer);
+        registerCommand("applyFixes", applyFixes);
+        registerCommand("showReferences", showReferences);
+        registerCommand("runGlobalDiagnostics", runGlobalDiagnostics);
 
-        context.subscriptions.push(commands.registerCommand("haxe.restartLanguageServer", restartLanguageServer));
-        context.subscriptions.push(commands.registerCommand("haxe.applyFixes", applyFixes));
+        var defaultWordPattern = "(-?\\d*\\.\\d\\w*)|([^\\`\\~\\!\\@\\#\\%\\^\\&\\*\\(\\)\\-\\=\\+\\[\\{\\]\\}\\\\\\|\\;\\:\\'\\\"\\,\\.\\<\\>\\/\\?\\s]+)";
+        var wordPattern = defaultWordPattern + "|(@:\\w*)"; // metadata
+        languages.setLanguageConfiguration("Haxe", {wordPattern: new js.RegExp(wordPattern)});
 
         if (!js.node.Fs.existsSync(Path.join(Vscode.workspace.rootPath, "build", "project-debug-html5.hxml"))) {
             Vscode.extensions.getExtension('ktx.kha').exports.compile("debug-html5").then(
@@ -39,8 +43,8 @@ class Main {
         }
     }
 
-    inline function log(message:String) {
-        vshaxeChannel.append(message);
+    function registerCommand(command:String, callback:Function) {
+        context.subscriptions.push(commands.registerCommand("haxe." + command, callback));
     }
 
     function applyFixes(uri:String, version:Int, edits:Array<TextEdit>) {
@@ -57,12 +61,24 @@ class Main {
         editor.edit(function(mutator) {
             for (edit in edits) {
                 var range = new Range(edit.range.start.line, edit.range.start.character, edit.range.end.line, edit.range.end.character);
-                mutator.replace(range, edit.newText);
+                mutator.delete(range);
+                mutator.insert(range.start, edit.newText);
             }
         });
     }
 
+    function showReferences(uri:String, position:Position, locations:Array<Location>) {
+        inline function copyPosition(position) return new Position(position.line, position.character);
+        // this is retarded
+        var locations = locations.map(function(location)
+            return new Location(Uri.parse(cast location.uri), new Range(copyPosition(location.range.start), copyPosition(location.range.end)))
+        );
+        commands.executeCommand("editor.action.showReferences", Uri.parse(uri), copyPosition(position), locations).then(function(s) trace(s), function(s) trace("err: " + s));
+    }
 
+    function runGlobalDiagnostics() {
+        client.sendNotification({method: "vshaxe/runGlobalDiagnostics"});
+    }
 
     function startLanguageServer() {
         var serverModule = context.asAbsolutePath("./server_wrapper.js");
@@ -80,10 +96,12 @@ class Main {
                 kha: findKha()
             }
         };
-        var client = new LanguageClient("Haxe", serverOptions, clientOptions);
-        client.onNotification({method: "vshaxe/log"}, log);
+        client = new LanguageClient("haxe", "Haxe", serverOptions, clientOptions);
+        client.logFailedRequest = function(type, error) {
+            client.warn('Request ${type.method} failed.', error);
+        };
         client.onReady().then(function(_) {
-            log("Haxe language server started with Kha at " + findKha() + "\n");
+            client.outputChannel.appendLine("Haxe language server started with Kha at " + findKha());
             displayConfig.onDidChangeIndex = function(index) {
                 client.sendNotification({method: "vshaxe/didChangeDisplayConfigurationIndex"}, {index: index});
             }
@@ -96,7 +114,7 @@ class Main {
                 if (editor.document.getText(new Range(0, 0, 0, 1)).length > 0) // skip non-empty created files (can be created by e.g. copy-pasting)
                     return;
 
-                client.sendRequest({method: "vshaxe/calculatePackage"}, {fsPath: uri.fsPath}).then(function(result:{pack:String}) {
+                client.sendRequest({method: "vshaxe/determinePackage"}, {fsPath: uri.fsPath}).then(function(result:{pack:String}) {
                     if (result.pack == "")
                         return;
                     editor.edit(function(edit) edit.insert(new Position(0, 0), 'package ${result.pack};\n'));
@@ -109,6 +127,9 @@ class Main {
     }
 
     function restartLanguageServer() {
+        if (client != null && client.outputChannel != null)
+            client.outputChannel.dispose();
+            
         if (serverDisposable != null) {
             context.subscriptions.remove(serverDisposable);
             serverDisposable.dispose();
