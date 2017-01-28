@@ -5,6 +5,12 @@ haxe:
 
 install:
  - haxelib install hxnodejs
+ - haxelib install yaml
+ - haxelib git plist https://github.com/back2dos/plist
 
 script:
  - haxe build.hxml
+
+ - cd syntaxes
+ - npm install vscode-textmate
+ - haxe all.hxml
