@@ -1,16 +1,14 @@
 language: haxe
 sudo: false
+dist: trusty
 haxe:
  - development
 
 install:
- - haxelib install hxnodejs
- - haxelib install yaml
- - haxelib git plist https://github.com/back2dos/plist
+ - haxelib git vshaxe-build https://github.com/vshaxe/vshaxe-build
 
 script:
- - haxe build.hxml
-
- - cd syntaxes
- - npm install vscode-textmate
- - haxe all.hxml
+ - haxelib run vshaxe-build -v --debug -t all -m both
+ - haxelib run vshaxe-build -v -t vshaxe
+ - haxelib run vshaxe-build -v -t all --gen-tasks
+ - haxelib run vshaxe-build -v -t all --display

@@ -1,7 +1,26 @@
--cp server/src
--cp server/test
--cp server/protocol/src
+# This file is generated with vshaxe-build - DO NOT EDIT MANUALLY!
 -cp vscode-extern/src
 -cp src
+-cp server/src
+-cp server/protocol/src
+-cp server/formatter/src
+-cp server/test
+-cp server/formatter/test
+-cp syntaxes/src
+-D analyzer-optimize
+-D js_unflatten
+-D hxnodejs-no-version-warning
+-D JSTACK_MAIN=vshaxe.Main.main
 -lib hxnodejs
--js some.js
+-lib haxe-hxparser
+-lib compiletime
+-lib mockatoo
+-lib mconsole
+-lib hxargs
+-lib json2object
+-lib yaml
+-lib plist
+-debug
+-js bin/build.js
+--no-inline
+-main Build

@@ -1,12 +1,12 @@
 {
     "name": "vshaxe",
-    "version": "1.2.0",
+    "version": "1.5.1",
     "publisher": "nadako",
     "engines": {
         "vscode": "^1.0.0"
     },
-    "displayName": "Haxe Support",
-    "description": "Haxe language support for Visual Studio Code",
+    "displayName": "Haxe",
+    "description": "Haxe language support",
     "categories": [
         "Languages",
         "Linters"
@@ -15,7 +15,14 @@
         "theme": "dark",
         "color": "#A84B38"
     },
-    "icon": "haxe-logo.png",
+    "badges": [
+        {
+            "url": "https://api.travis-ci.org/vshaxe/vshaxe.svg?branch=master",
+            "href": "https://travis-ci.org/vshaxe/vshaxe",
+            "description": "Travis CI Status"
+        }
+    ],
+    "icon": "images/haxe-logo.png",
     "author": "Dan Korostelev",
     "license": "MIT",
     "dependencies": {
@@ -28,8 +35,8 @@
         "url": "https://github.com/vshaxe/vshaxe.git"
     },
     "scripts": {
-        "vscode:prepublish": "haxe build.hxml",
-        "postinstall": "haxe build.hxml"
+        "vscode:prepublish": "haxelib run vshaxe-build -t vshaxe -t language-server-tests -t tm-language",
+        "postinstall": "haxelib run vshaxe-build -t vshaxe -t language-server-tests -t tm-language"
     },
     "main": "bin/client.js",
     "activationEvents": [
@@ -37,7 +44,8 @@
         "onCommand:haxe.restartLanguageServer",
         "onCommand:haxe.initProject",
         "onCommand:haxe.selectDisplayConfiguration",
-        "onCommand:haxe.runGlobalDiagnostics"
+        "onCommand:haxe.runGlobalDiagnostics",
+        "onCommand:haxe.toggleCodeLens"
     ],
     "contributes": {
         "configuration": {
@@ -175,6 +183,11 @@
                 "title": "Run Global Diagnostics Check",
                 "command": "haxe.runGlobalDiagnostics",
                 "category": "Haxe"
+            },
+            {
+                "title": "Toggle Code Lens",
+                "command": "haxe.toggleCodeLens",
+                "category": "Haxe"
             }
         ],
         "languages": [
@@ -187,7 +200,7 @@
                 "extensions": [
                     ".hx"
                 ],
-                "configuration": "./haxe.configuration.json"
+                "configuration": "./configurations/haxe.configuration.json"
             },
             {
                 "id": "hxml",
@@ -198,7 +211,7 @@
                 "extensions": [
                     ".hxml"
                 ],
-                "configuration": "./hxml.configuration.json"
+                "configuration": "./configurations/hxml.configuration.json"
             },
             {
                 "id": "Haxe AST dump",
@@ -208,7 +221,7 @@
                 "extensions": [
                     ".dump"
                 ],
-                "configuration": "./haxe.configuration.json"
+                "configuration": "./configurations/haxe.configuration.json"
             }
         ],
         "grammars": [
@@ -245,6 +258,28 @@
             {
                 "fileMatch": "haxelib.json",
                 "url": "http://json.schemastore.org/haxelib"
+            }
+        ],
+        "problemPatterns": [
+            {
+                "name": "haxe",
+                "regexp": "^(.+):(\\d+): (?:lines \\d+-(\\d+)|character(?:s (\\d+)-| )(\\d+)) : (?:(Warning) : )?(.*)$",
+                "file": 1,
+                "line": 2,
+                "endLine": 3,
+                "column": 4,
+                "endColumn": 5,
+                "severity": 6,
+                "message": 7
+            }
+        ],
+        "problemMatchers": [
+            {
+                "name": "haxe",
+                "owner": "haxe",
+                "applyTo": "allDocuments",
+                "fileLocation": ["relative", "${cwd}"],
+                "pattern": "$haxe"
             }
         ]
     },

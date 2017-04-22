@@ -1,17 +1,100 @@
-### ?.?.? (to be released)
+### 1.5.1 (April 21, 2017)
+
+**Bugfixes**:
+
+- fixed toplevel completion hanging in some cases [haxe-languageserver#23](https://github.com/vshaxe/haxe-languageserver/pull/23#issuecomment-295468634)
+
+
+### 1.5.0 (April 7, 2017)
+
+**New Features**:
+
+- added a Haxe problem matcher (referenced with `"problemMatcher": "$haxe"`, VSCode 1.11.0+)
+
+**Changes and improvements**:
+
+- use the Haxe problem matcher in "Init Project"
+
+**Bugfixes**:
+
+- fixed support for Haxe 4+ (development branch)
+
+### 1.4.0 (International Women's Day, 2017)
+
+**New Features**:
+
+- added a `Toggle Code Lens` command ([#94](https://github.com/vshaxe/vshaxe/issues/94))
+
+**Bugfixes**:
+
+- fixed several small highlighting issues (haxe-tmLanguage[[#2](https://github.com/vshaxe/haxe-tmLanguage/issues/2), [#5](https://github.com/vshaxe/haxe-tmLanguage/issues/5), [#8](https://github.com/vshaxe/haxe-tmLanguage/issues/8), [#14](https://github.com/vshaxe/haxe-tmLanguage/issues/14), [#15](https://github.com/vshaxe/haxe-tmLanguage/issues/15), [#17](https://github.com/vshaxe/haxe-tmLanguage/issues/17)])
+- fixed signature help sometimes not having argument names ([haxe#6064](https://github.com/HaxeFoundation/haxe/issues/6064))
+- fixed argument name generation with anon structure types
+
+**Changes and improvements**:
+
+- diagnostics now update when the active editor is changed
+- init project command: `.hxml` files in local haxelib repos are now ignored ([#93](https://github.com/vshaxe/vshaxe/issues/93))
+- init project command: moved the comments in the generated `settings.json` to `README.md`
+- init project command: added `-D analyzer-optimize` to the generated `build.hxml`
+- init project command: a quick pick selection is no longer required with only one `.hxml` file
+- init project command: use `version` 2.0.0 in `tasks.json` (VSCode 1.10.0)
+- still attempt display requests without any `displayConfigurations` ([#105](https://github.com/vshaxe/vshaxe/issues/105))
+
+### 1.3.3 (February 16, 2017)
+
+**Bugfixes**:
+
+- fixed diagnostics always being filtered if `diagnosticsPathFilter` is set
+
+### 1.3.2 (February 14, 2017)
+
+**Bugfixes**:
+
+- properly handle cancelled requests in the language server (so dead requests don't pile up inside VS Code)
+
+**Changes and improvements**:
+
+- no longer request diagnostics if `diagnosticsPathFilter` doesn't match
+
+### 1.3.1 (February 9, 2017)
+
+**Bugfixes**:
+
+- fixed invalid argument name generation with type parameters ([haxe-languageserver#28](https://github.com/vshaxe/haxe-languageserver/issues/28))
+- fixed inconsistent icon usage in field and toplevel completion
+- fixed diagnostics sometimes being reported for the wrong file
+
+**Changes and improvements**:
+
+- smarter error handling ([#20](https://github.com/vshaxe/vshaxe/issues/20), [haxe-languageserver#20](https://github.com/vshaxe/haxe-languageserver/issues/20))
+- ignore hidden files in the "init project" command ([#10](https://github.com/vshaxe/vshaxe/issues/10))
+- some minor highlighting improvements ([haxe-tmLanguage#10](https://github.com/vshaxe/haxe-tmLanguage/issues/10))
+- added a quick fix for "invalid package" diagnostics
+- leading `*` characters are now removed from signature help docs
+
+### 1.3.0 (February 2, 2017)
 
 **New Features**:
 
 - allow generation of anonymous functions in signature completion
 - added a `"haxe.codeGeneration"` setting
-- added an "Extract variable" code action
 
 **Bugfixes**:
 
-- fixed regex highlighting in the upcoming VSCode 1.9.0
+- fixed regex highlighting in VSCode 1.9.0
 - fixed highlighting of constructor references (`Class.new`)
 - fixed highlighting of package names with underscores
+- fixed highlighting of comments after conditionals ([haxe-tmLanguage#1](https://github.com/vshaxe/haxe-tmLanguage/issues/1))
 - fixed indentation when writing a comment after `}` ([#83](https://github.com/vshaxe/vshaxe/issues/83))
+- fixed display requests being attempted with no display config
+- fixed toplevel completion with whitespace after `:` ([haxe-languageserver#22](https://github.com/vshaxe/haxe-languageserver/issues/22))
+- fixed some compiler errors not being highlighted by diagnostics ([#62](https://github.com/vshaxe/vshaxe/issues/62))
+
+**Changes and improvements**:
+
+- improved handling of Haxe crashes, e.g. with invalid arguments ([haxe-languageserver#20](https://github.com/vshaxe/haxe-languageserver/issues/20))
+- support auto closing and surrounding brackets in hxml files (for `--macro` arguments)
 
 ### 1.2.0 (January 23, 2017)
 
