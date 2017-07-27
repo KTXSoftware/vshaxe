@@ -1,23 +1,37 @@
 package vshaxe;
 
 import js.node.Path;
-import Vscode.*;
-import vscode.*;
+import vshaxe.commands.Commands;
+import vshaxe.commands.InitProject;
+import vshaxe.dependencyExplorer.DependencyExplorer;
+import vshaxe.display.DisplayArguments;
+import vshaxe.display.HaxeDisplayArgumentsProvider;
+import vshaxe.helper.HxmlParser;
+import vshaxe.helper.HaxeExecutable;
+import vshaxe.server.LanguageServer;
+import vshaxe.tasks.HxmlTaskProvider;
 
 class Main {
+    var api:Vshaxe;
+
     function new(context:ExtensionContext) {
-        new InitProject(context);
-        var server = new LanguageServer(context);
+        var displayArguments = new DisplayArguments(context);
+        var haxeExecutable = new HaxeExecutable(context);
+        api = {
+            haxeExecutable: haxeExecutable,
+            registerDisplayArgumentsProvider: displayArguments.registerProvider,
+            parseHxmlToArguments: HxmlParser.parseToArgs
+        };
+
+        var server = new LanguageServer(context, haxeExecutable, displayArguments);
         new Commands(context, server);
+        new InitProject(context);
+        new DependencyExplorer(context, displayArguments, haxeExecutable);
+        var hxmlDiscovery = new HxmlDiscovery(context);
+        new HaxeDisplayArgumentsProvider(context, api, hxmlDiscovery);
+        new HxmlTaskProvider(hxmlDiscovery, haxeExecutable);
 
-        setLanguageConfiguration();
         server.start();
-    }
-
-    function setLanguageConfiguration() {
-        var defaultWordPattern = "(-?\\d*\\.\\d\\w*)|([^\\`\\~\\!\\@\\#\\%\\^\\&\\*\\(\\)\\-\\=\\+\\[\\{\\]\\}\\\\\\|\\;\\:\\'\\\"\\,\\.\\<\\>\\/\\?\\s]+)";
-        var wordPattern = defaultWordPattern + "|(@:\\w*)"; // metadata
-        languages.setLanguageConfiguration("Haxe", {wordPattern: new js.RegExp(wordPattern)});
     }
 
     static function findKha():String {
@@ -28,6 +42,6 @@ class Main {
     @:keep
     @:expose("activate")
     static function main(context:ExtensionContext) {
-        new Main(context);
+        return new Main(context).api;
     }
 }

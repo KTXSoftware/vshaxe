@@ -1,5 +1,6 @@
 # This file is generated with vshaxe-build - DO NOT EDIT MANUALLY!
 -cp vscode-extern/src
+-cp src-api
 -cp src
 -cp server/src
 -cp server/protocol/src
@@ -11,7 +12,9 @@
 -D js_unflatten
 -D hxnodejs-no-version-warning
 -D JSTACK_MAIN=vshaxe.Main.main
+-D JSTACK_FORMAT=vscode
 -lib hxnodejs
+-lib jstack
 -lib haxe-hxparser
 -lib compiletime
 -lib mockatoo

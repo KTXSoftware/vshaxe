@@ -1,9 +1,89 @@
+### 1.9.1 (to be released)
+
+**Bugfixes**:
+
+- fixed the dependency explorer for local haxelib repos ([#162](https://github.com/vshaxe/vshaxe/issues/162))
+
+### 1.9.0 (July 21, 2017)
+
+**New Features**:
+
+- added a `"haxe.executable"` setting
+- added a task provider for top-level HXML files
+- added support for using top-level HXML files as display configurations
+- added an extension API enabling Haxe build tools to provide completion ([#18](https://github.com/vshaxe/vshaxe/issues/18))
+- added a `Select Completion Provider` command
+
+**Bugfixes**:
+
+- fixed the dependency explorer for `haxelib dev` libs in the haxelib repo ([#141](https://github.com/vshaxe/vshaxe/issues/141))
+- fixed the dependency explorer with a relative `"haxe.executable"` path ([#58](https://github.com/vshaxe/vshaxe/issues/58))
+- fixed the dependency explorer with invalid classpaths
+- fixed a minor anon function highlighting issue ([haxe-tmLanguage#31](https://github.com/vshaxe/haxe-tmLanguage/issues/31))
+- fixed renaming `expr` in `case macro $expr:` ([#142](https://github.com/vshaxe/vshaxe/issues/142))
+- fixed a regression with duplicated Haxe output channels ([#87](https://github.com/vshaxe/vshaxe/issues/87))
+- fixed line break handling in completion docs ([#150](https://github.com/vshaxe/vshaxe/issues/150))
+
+**Changes and improvements**:
+
+- changed the required VSCode version to 1.14.0
+- changed dependency explorer selection to open files permanently on double-click
+- added support for `@event` JavaDoc tags in highlighting and completion
+- reduced Haxe server restarts to changes of relevant settings ([#153](https://github.com/vshaxe/vshaxe/issues/153))
+- greatly simplified the `Initialize VS Code Project` command
+- deprecated `"haxe.displayServer"`'s `"haxePath"` / `"env"` in favor of `"haxe.executable"`
+
+### 1.8.0 (June 28, 2017)
+
+**New Features**:
+
+- added a "Haxe Dependencies" view to the explorer
+- added support for renaming local variables and parameters ([haxe-languageserver#32](https://github.com/vshaxe/haxe-languageserver/issues/32))
+
+**Bugfixes**:
+
+- fixed a minor string interpolation highlighting issue ([haxe-tmLanguage#27](https://github.com/vshaxe/haxe-tmLanguage/issues/27))
+- fixed catch variables not being listed in document symbols
+- fixed diagnostics of deleted / renamed files not being removed ([#132](https://github.com/vshaxe/vshaxe/issues/132))
+
+**Changes and improvements**:
+
+- changed the required VSCode version to 1.13.0
+- allowed filtering by path in the display configuration picker
+- init project command: replaced `-js` with `--interp` ([#124](https://github.com/vshaxe/vshaxe/issues/124))
+- adjusted column index handling to support changes in Haxe 4 ([#134](https://github.com/vshaxe/vshaxe/issues/134))
+
+### 1.7.0 (May 24, 2017)
+
+**Bugfixes**:
+
+- fixed Unicode character handling for completion with Haxe 4
+- fixed filtering in metadata completion ([#121](https://github.com/vshaxe/vshaxe/issues/121))
+
+**Changes and improvements**:
+
+- changed the required VSCode version to 1.12.0
+- added a progress indicator for Completion Cache Initialization (#108)
+- added a progress indicator for Global Diagnostics Checks
+- made document symbols much more robust ([haxe-languageserver#31](https://github.com/vshaxe/haxe-languageserver/issues/31))
+
+### 1.6.0 (May 13, 2017)
+
+**New Features**:
+
+- added highlighting support for Haxe 4 arrow functions ([HXP-0002](https://github.com/HaxeFoundation/haxe-evolution/blob/master/proposals/0002-arrow-functions.md))
+- added a `useArrowSyntax` option for anonymous function generation
+- added a "Generate capture variables" code action
+
+**Bugfixes**:
+
+- fixed several small highlighting issues (haxe-tmLanguage[[#4](https://github.com/vshaxe/haxe-tmLanguage/issues/4), [#6](https://github.com/vshaxe/haxe-tmLanguage/issues/6), [#11](https://github.com/vshaxe/haxe-tmLanguage/issues/11), [#16](https://github.com/vshaxe/haxe-tmLanguage/issues/16), [#22](https://github.com/vshaxe/haxe-tmLanguage/issues/22)])
+
 ### 1.5.1 (April 21, 2017)
 
 **Bugfixes**:
 
-- fixed toplevel completion hanging in some cases [haxe-languageserver#23](https://github.com/vshaxe/haxe-languageserver/pull/23#issuecomment-295468634)
-
+- fixed toplevel completion hanging in some cases ([haxe-languageserver#23](https://github.com/vshaxe/haxe-languageserver/pull/23#issuecomment-295468634))
 
 ### 1.5.0 (April 7, 2017)
 

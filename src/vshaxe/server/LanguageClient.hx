@@ -1,9 +1,8 @@
+package vshaxe.server;
+
 import haxe.extern.EitherType;
 import js.node.ChildProcess.ChildProcessForkOptions;
 import js.Promise;
-import vscode.Disposable;
-import vscode.FileSystemWatcher;
-import vscode.TextDocument;
 
 @:jsRequire("vscode-languageclient", "LanguageClient")
 extern class LanguageClient {

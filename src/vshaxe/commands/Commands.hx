@@ -1,9 +1,6 @@
-package vshaxe;
+package vshaxe.commands;
 
-import Vscode.*;
-import haxe.Constraints.Function;
-import vscode.*;
-using StringTools;
+import vshaxe.server.LanguageServer;
 
 class Commands {
     var context:ExtensionContext;
@@ -13,15 +10,15 @@ class Commands {
         this.context = context;
         this.server = server;
 
-        registerCommand("restartLanguageServer", server.restart);
-        registerCommand("applyFixes", applyFixes);
-        registerCommand("showReferences", showReferences);
-        registerCommand("runGlobalDiagnostics", runGlobalDiagnostics);
-        registerCommand("toggleCodeLens", toggleCodeLens);
-    }
+        context.registerHaxeCommand(RestartLanguageServer, server.restart);
+        context.registerHaxeCommand(ApplyFixes, applyFixes);
+        context.registerHaxeCommand(ShowReferences, showReferences);
+        context.registerHaxeCommand(RunGlobalDiagnostics, runGlobalDiagnostics);
+        context.registerHaxeCommand(ToggleCodeLens, toggleCodeLens);
 
-    function registerCommand(command:String, callback:Function) {
-        context.subscriptions.push(commands.registerCommand("haxe." + command, callback));
+        #if debug
+        context.registerHaxeCommand(ClearMementos, clearMementos);
+        #end
     }
 
     function applyFixes(uri:String, version:Int, edits:Array<TextEdit>) {
@@ -95,6 +92,16 @@ class Commands {
         // editing the global config only has an effect if there's no workspace value
         var global = info.workspaceValue == null;
         config.update(key, !value, global);
+    }
+
+    function clearMementos() {
+        inline function clear(memento:HaxeMemento) {
+            context.workspaceState.update(memento, js.Lib.undefined);
+        }
+
+        clear(HaxeMemento.DisplayArgumentsProviderName);
+        clear(HaxeMemento.DisplayConfigurationIndex);
+        clear(HaxeMemento.HxmlDiscoveryFiles);
     }
 
     function getCurrentConfigValue<T>(info, config:WorkspaceConfiguration):T {
