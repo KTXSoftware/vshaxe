@@ -53,6 +53,7 @@ class LanguageServer {
             initializationOptions: {
                 displayArguments: displayArguments.arguments,
                 displayServerConfig: displayServerConfig,
+                kha: findKha()
             }
         };
         client = new LanguageClient("haxe", "Haxe", serverOptions, clientOptions);
@@ -67,7 +68,7 @@ class LanguageServer {
         var argumentChangeListenerDisposable = displayArguments.onDidChangeArguments(_ -> argumentsChanged = true);
 
         client.onReady().then(function(_) {
-            client.outputChannel.appendLine("Haxe language server started");
+            client.outputChannel.appendLine("Haxe language server started with Kha at " + findKha());
             argumentChangeListenerDisposable.dispose();
             if (argumentsChanged)
                 client.sendNotification({method: "vshaxe/didChangeDisplayArguments"}, {arguments: displayArguments.arguments});
@@ -178,5 +179,10 @@ class LanguageServer {
         progresses = new Map();
 
         start();
+    }
+
+    static function findKha():String {
+        var khaapi = Vscode.extensions.getExtension('ktx.kha').exports;
+        return khaapi.findKha();
     }
 }

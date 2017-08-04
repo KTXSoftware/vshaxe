@@ -1,6 +1,5 @@
 package vshaxe;
 
-import js.node.Path;
 import vshaxe.commands.Commands;
 import vshaxe.commands.InitProject;
 import vshaxe.dependencyExplorer.DependencyExplorer;
@@ -14,7 +13,7 @@ import vshaxe.tasks.HxmlTaskProvider;
 class Main {
     var api:Vshaxe;
 
-    function new(context:ExtensionContext) {
+    function init(context:ExtensionContext) {
         var displayArguments = new DisplayArguments(context);
         var haxeExecutable = new HaxeExecutable(context);
         api = {
@@ -34,9 +33,20 @@ class Main {
         server.start();
     }
 
-    static function findKha():String {
-        var khaapi = Vscode.extensions.getExtension('ktx.kha').exports;
-        return khaapi.findKha();
+    function new(context:ExtensionContext) {
+        if (!js.node.Fs.existsSync(js.node.Path.join(Vscode.workspace.rootPath, "build", "project-debug-html5.hxml"))) {
+            Vscode.extensions.getExtension('ktx.kha').exports.compile("debug-html5").then(
+                function (value: Dynamic){
+                    init(context);
+                },
+                function (error: Dynamic) {
+
+                }
+            );
+        }
+        else {
+            init(context);
+        }
     }
 
     @:keep
