@@ -40,7 +40,7 @@ class Main {
                     init(context);
                 },
                 function (error: Dynamic) {
-
+                    init(context);
                 }
             );
         }
