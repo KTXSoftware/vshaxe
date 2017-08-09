@@ -68,6 +68,7 @@ class LanguageServer {
         var argumentChangeListenerDisposable = displayArguments.onDidChangeArguments(_ -> argumentsChanged = true);
 
         client.onReady().then(function(_) {
+            client.outputChannel.show();
             client.outputChannel.appendLine("Haxe language server started with Kha at " + findKha());
             argumentChangeListenerDisposable.dispose();
             if (argumentsChanged)

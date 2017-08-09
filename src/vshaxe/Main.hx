@@ -36,7 +36,7 @@ class Main {
     function new(context:ExtensionContext) {
         if (!js.node.Fs.existsSync(js.node.Path.join(Vscode.workspace.rootPath, "build", "project-debug-html5.hxml"))) {
             Vscode.extensions.getExtension('ktx.kha').exports.compile("debug-html5").then(
-                function (value: Dynamic){
+                function (value: Dynamic) {
                     init(context);
                 },
                 function (error: Dynamic) {
