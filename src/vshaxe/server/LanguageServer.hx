@@ -58,7 +58,7 @@ class LanguageServer {
         };
         client = new LanguageClient("haxe", "Haxe", serverOptions, clientOptions);
         client.logFailedRequest = function(type, error) {
-            client.warn('Request ${type.method} failed.', error);
+            //client.warn('Request ${type.method} failed.', error);
         };
 
         // If arguments change while we're starting language server we remember that fact
